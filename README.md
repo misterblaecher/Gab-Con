@@ -1,4 +1,4 @@
-# Gab Con Resource Pack
+# Gab Con — Resource Pack & Loading Screen
 
 Resource pack personnalisé du serveur **Gab Con** pour **Minecraft Java 1.21.1**.
 
@@ -34,7 +34,33 @@ La couleur `purple` utilise maintenant le style Gab Con.
 /bossbar set gabcon:server players @a
 ```
 
-## Installation manuelle
+## Faux écran de chargement Gab Con
+
+Le dossier `datapack/` contient maintenant une séquence d'arrivée vanilla pour Minecraft Java 1.21.1 :
+
+- logo Gab Con ;
+- bossbar personnalisée ;
+- barre de progression 5 → 100 % ;
+- messages de chargement ;
+- sons vanilla ;
+- protection et ralentissement temporaires ;
+- déclenchement au premier passage puis à chaque reconnexion.
+
+Pour tester l'animation manuellement :
+
+```mcfunction
+/execute as NOM_DU_JOUEUR run function gabcon:loading/test
+```
+
+Pour tous les joueurs :
+
+```mcfunction
+/function gabcon:admin/replay_all
+```
+
+Le ZIP généré automatiquement est `GabCon-Datapack-1.21.1.zip`. Il doit être placé dans `<monde>/datapacks/`.
+
+## Installation manuelle du resource pack
 
 Le fichier `1.21.1-Gab Con.zip` peut être placé tel quel dans :
 
@@ -48,10 +74,11 @@ Les fichiers de travail décompressés se trouvent dans `resource-pack/`.
 
 - `Unpack Gab Con resource pack` : extrait le ZIP vers `resource-pack/` quand le ZIP est remplacé.
 - `Build Gab Con resource pack` : reconstruit automatiquement le ZIP quand un fichier de `resource-pack/` change.
+- `Build Gab Con datapack` : reconstruit automatiquement `GabCon-Datapack-1.21.1.zip` quand un fichier de `datapack/` change.
 
 ## Suite prévue
 
 - glyphes/icônes Gab Con supplémentaires ;
 - GUI violet/vert ;
 - sons Gab Con ;
-- écran d'arrivée simulé avec datapack + `/title`.
+- amélioration progressive de l'écran d'arrivée et des transitions.
