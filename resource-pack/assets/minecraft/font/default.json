@@ -1,19 +1,28 @@
 {
-    "providers": [
-        {
-            "type": "reference",
-            "id": "minecraft:include/space"
-        },
-        {
-            "type": "reference",
-            "id": "minecraft:include/default",
-            "filter": {
-                "uniform": false
-            }
-        },
-        {
-            "type": "reference",
-            "id": "minecraft:include/unifont"
-        }
-    ]
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "gabcon:font/logo.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        "\ue001"
+      ]
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/space"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/default",
+      "filter": {
+        "uniform": false
+      }
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/unifont"
+    }
+  ]
 }

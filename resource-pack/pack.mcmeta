@@ -1,10 +1,6 @@
 {
   "pack": {
-    "pack_format": 48,
-    "description": "§f➜ Get more packs at §2Texture-Packs.com",
-    "supported_formats": {
-      "min_inclusive": 30,
-      "max_inclusive": 99
-    }
+    "pack_format": 34,
+    "description": "§d§lGAB §a§lCON §8• §fResource Pack officiel §7(1.21.1)"
   }
 }
