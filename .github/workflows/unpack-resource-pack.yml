@@ -1,0 +1,44 @@
+name: Unpack Gab Con resource pack
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "1.21.1-Gab Con.zip"
+      - ".github/workflows/unpack-resource-pack.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unpack resource pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf resource-pack .transfer
+          mkdir -p resource-pack .transfer
+          unzip -q "1.21.1-Gab Con.zip" -d resource-pack
+
+          # Temporary UTF-8 chunks let repository automation copy the binary ZIP
+          # to the public website repository without exposing this private repo.
+          base64 -w 0 "1.21.1-Gab Con.zip" | split -b 700k - .transfer/gab-con-resource-pack.b64.part-
+
+      - name: Commit unpacked files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resource-pack .transfer
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "Unpack Gab Con resource pack"
+          git push
