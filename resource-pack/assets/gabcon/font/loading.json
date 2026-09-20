@@ -1,0 +1,13 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "gabcon:font/loading_screen.png",
+      "ascent": 135,
+      "height": 270,
+      "chars": [
+        ""
+      ]
+    }
+  ]
+}

@@ -12,7 +12,7 @@ effect give @s minecraft:resistance 5 4 true
 
 # Logo + première étape.
 title @s times 0 110 10
-title @s title {"text":"\ue001","color":"white"}
+title @s title {"text":"\ue100","font":"gabcon:loading","color":"white"}
 title @s subtitle {"text":"Initialisation de Gab Con...","color":"light_purple"}
 title @s actionbar {"text":"█","color":"light_purple","extra":[{"text":"███████████████████  ","color":"dark_gray"},{"text":"5%","color":"white"}]}
 
