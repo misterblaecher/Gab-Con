@@ -1,0 +1,21 @@
+name: Check processed upload commits
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-processed-uploads:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check Add files via upload commits
+        run: python3 tools/check_processed_uploads.py
