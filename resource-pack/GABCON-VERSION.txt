@@ -1,0 +1,3 @@
+Gab Con Resource Pack
+Minecraft Java 1.21.1
+Version: 0.1.0
