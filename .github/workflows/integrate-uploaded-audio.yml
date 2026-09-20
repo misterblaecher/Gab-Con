@@ -99,16 +99,27 @@ jobs:
           }
           JSON
 
-      - name: Commit generated resource-pack audio
+      - name: Rebuild resource-pack ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f '1.21.1-Gab Con.zip'
+          (
+            cd resource-pack
+            zip -qr '../1.21.1-Gab Con.zip' .
+          )
+
+      - name: Commit generated resource-pack audio and ZIP
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add resource-pack/assets/minecraft/sounds resource-pack/assets/minecraft/sounds.json
+          git add resource-pack/assets/minecraft/sounds resource-pack/assets/minecraft/sounds.json '1.21.1-Gab Con.zip'
           if git diff --cached --quiet; then
-            echo 'Audio resource pack is already up to date.'
+            echo 'Audio resource pack and ZIP are already up to date.'
             exit 0
           fi
-          git commit -m 'Integrate uploaded audio into resource pack'
-          git push
+          git commit -m 'Integrate uploaded audio and rebuild resource pack ZIP'
+          git pull --rebase origin main
+          git push origin HEAD:main
