@@ -1,0 +1,114 @@
+name: Integrate uploaded audio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.mp3'
+      - '.github/workflows/integrate-uploaded-audio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-audio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure ffmpeg is available
+        shell: bash
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+
+      - name: Convert uploaded MP3 files to Minecraft OGG sounds
+        shell: bash
+        run: |
+          set -euo pipefail
+          out='resource-pack/assets/minecraft/sounds/gabcon'
+          mkdir -p "$out"/{villager,enderman,zombie,pig,horse,ender_dragon,creeper,drink}
+
+          convert() {
+            src="$1"
+            dst="$2"
+            test -f "$src"
+            ffmpeg -hide_banner -loglevel error -y -i "$src" -map_metadata -1 -vn -ac 1 -ar 44100 -c:a libvorbis -q:a 4 "$dst"
+          }
+
+          convert '1kg-de-carotte-villager.mp3' "$out/villager/1kg_de_carotte.ogg"
+          convert 'et-quest-ce-voulez-vous-que-ca-mfoute-villager.mp3' "$out/villager/quest_ce_voulez_vous.ogg"
+          convert 'pas_faisable-villager.mp3' "$out/villager/pas_faisable.ogg"
+          convert 'tes_malade_toi-villager.mp3' "$out/villager/tes_malade_toi.ogg"
+          convert 'du-bist-gut-genug-loud-enderman.mp3' "$out/enderman/du_bist_gut_genug.ogg"
+          convert 'francois-damiens-ou-tu-sors-ou-je-te-sors-zombies.mp3' "$out/zombie/ou_tu_sors.ogg"
+          convert 'francois-damiens-rire-real-pigs.mp3' "$out/pig/francois_damiens_rire.ogg"
+          convert 'nathalie-present-horses.mp3' "$out/horse/nathalie_present.ogg"
+          convert 'termine-bonsoir-francois-damiens-ender.dragron.mp3' "$out/ender_dragon/termine_bonsoir.ogg"
+          convert 'creaper-sound.mp3' "$out/creeper/creeper.ogg"
+          convert 'FOODGware_Bouteille de biere ouverture 2 (ID 1931)_LaSonotheque.fr.mp3' "$out/drink/bottle_open.ogg"
+
+      - name: Write Minecraft sound overrides
+        shell: bash
+        run: |
+          cat > resource-pack/assets/minecraft/sounds.json <<'JSON'
+          {
+            "entity.villager.ambient": {
+              "replace": true,
+              "sounds": [
+                "gabcon/villager/1kg_de_carotte",
+                "gabcon/villager/quest_ce_voulez_vous",
+                "gabcon/villager/pas_faisable",
+                "gabcon/villager/tes_malade_toi"
+              ]
+            },
+            "entity.enderman.ambient": {
+              "replace": true,
+              "sounds": ["gabcon/enderman/du_bist_gut_genug"]
+            },
+            "entity.zombie.ambient": {
+              "replace": true,
+              "sounds": ["gabcon/zombie/ou_tu_sors"]
+            },
+            "entity.pig.ambient": {
+              "replace": true,
+              "sounds": ["gabcon/pig/francois_damiens_rire"]
+            },
+            "entity.horse.ambient": {
+              "replace": true,
+              "sounds": ["gabcon/horse/nathalie_present"]
+            },
+            "entity.ender_dragon.death": {
+              "replace": true,
+              "sounds": ["gabcon/ender_dragon/termine_bonsoir"]
+            },
+            "entity.creeper.primed": {
+              "replace": true,
+              "sounds": ["gabcon/creeper/creeper"]
+            },
+            "entity.generic.drink": {
+              "replace": true,
+              "sounds": ["gabcon/drink/bottle_open"]
+            }
+          }
+          JSON
+
+      - name: Commit generated resource-pack audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add resource-pack/assets/minecraft/sounds resource-pack/assets/minecraft/sounds.json
+          if git diff --cached --quiet; then
+            echo 'Audio resource pack is already up to date.'
+            exit 0
+          fi
+          git commit -m 'Integrate uploaded audio into resource pack'
+          git push
