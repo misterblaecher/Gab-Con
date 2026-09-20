@@ -27,15 +27,32 @@ jobs:
       - name: Generate panorama, join screen and transparent GUI
         run: python tools/apply_gabcon_visuals.py
 
-      - name: Commit generated visuals
+      - name: Build resource pack and datapack ZIPs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rm -f "1.21.1-Gab Con.zip"
+          (
+            cd resource-pack
+            zip -qr "../1.21.1-Gab Con.zip" .
+          )
+
+          rm -f "GabCon-Datapack-1.21.1.zip"
+          (
+            cd datapack
+            zip -qr "../GabCon-Datapack-1.21.1.zip" .
+          )
+
+      - name: Commit generated visuals and ZIPs
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add resource-pack datapack sources
+          git add resource-pack datapack sources "1.21.1-Gab Con.zip" "GabCon-Datapack-1.21.1.zip"
           if git diff --cached --quiet; then
-            echo "Visual assets already up to date."
+            echo "Visual assets and ZIPs already up to date."
             exit 0
           fi
           git commit -m "Apply Gab Con loading screens and transparent GUI"
