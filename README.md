@@ -82,3 +82,47 @@ Les fichiers de travail décompressés se trouvent dans `resource-pack/`.
 - GUI violet/vert ;
 - sons Gab Con ;
 - amélioration progressive de l'écran d'arrivée et des transitions.
+
+
+## Panorama & écran de connexion
+
+Les visuels source sont à la racine du dépôt :
+
+- `Loading-screen-panorama-1.png` → converti automatiquement en cubemap Minecraft (`panorama_0.png` à `panorama_5.png`) pour le panorama du menu principal.
+- `Loading-screen.png` → intégré comme glyphe plein écran `U+E100` dans la police `gabcon:loading` et affiché par le datapack quand un joueur rejoint le serveur.
+
+Le panorama source actuel fait **1774×887**, soit un format 2:1 adapté à une conversion equirectangulaire en cubemap. L'écran de connexion fait **1536×1024**.
+
+> Le panorama du menu principal n'est visible avant la connexion que si le resource pack est déjà actif localement (par exemple inclus dans le modpack). Un pack téléchargé uniquement lors de la connexion au serveur ne peut pas modifier le menu affiché avant son téléchargement.
+
+## GUI & HUD transparents
+
+Les interfaces de conteneurs sont rendues semi-transparentes à environ **62 % d'opacité** :
+
+- inventaire joueur ;
+- coffres ;
+- crafting table ;
+- fours / blast furnace / smoker ;
+- hopper ;
+- shulker box ;
+- anvil ;
+- enchanting table ;
+- smithing ;
+- stonecutter ;
+- villager ;
+- beacon ;
+- brewing stand ;
+- interfaces créatives ;
+- autres conteneurs vanilla présents dans le pack.
+
+Le HUD est également allégé :
+
+- hotbar : ~55 % ;
+- offhand : ~55 % ;
+- sélection de slot : ~78 % ;
+- fonds d'effets : ~55 % ;
+- fonds des barres XP / saut / indicateurs : ~62 %.
+
+Les cœurs, la faim, l'armure, le crosshair et les remplissages de progression restent nets pour conserver une bonne lisibilité.
+
+Le workflow `Apply Gab Con visuals` conserve une copie des textures d'origine dans `sources/gui-base/`, puis régénère les versions transparentes depuis cette base. Les modifications ne s'accumulent donc pas à chaque build.
