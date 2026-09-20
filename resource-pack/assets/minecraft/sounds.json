@@ -1,0 +1,47 @@
+{
+  "entity.villager.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.villager.ambient",
+    "sounds": [
+      "gabcon/villager_tes_malade_toi",
+      "gabcon/villager_1kg_de_carotte",
+      "gabcon/villager_et_quest_ce_voulez_vous_que_ca_mfoute",
+      "gabcon/villager_pas_faisable"
+    ]
+  },
+  "entity.horse.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.horse.ambient",
+    "sounds": [
+      "gabcon/horse_nathalie_present"
+    ]
+  },
+  "entity.zombie.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.zombie.ambient",
+    "sounds": [
+      "gabcon/zombie_ou_tu_sors"
+    ]
+  },
+  "entity.ender_dragon.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.ender_dragon.ambient",
+    "sounds": [
+      "gabcon/ender_dragon_termine_bonsoir"
+    ]
+  },
+  "entity.pig.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.pig.ambient",
+    "sounds": [
+      "gabcon/pig_francois_damiens_rire"
+    ]
+  },
+  "entity.enderman.ambient": {
+    "replace": true,
+    "subtitle": "subtitles.entity.enderman.ambient",
+    "sounds": [
+      "gabcon/enderman_du_bist_gut_genug_loud"
+    ]
+  }
+}
