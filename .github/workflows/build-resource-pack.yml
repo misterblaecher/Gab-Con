@@ -1,0 +1,43 @@
+name: Build Gab Con resource pack
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "resource-pack/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f "1.21.1-Gab Con.zip"
+          cd resource-pack
+          zip -qr "../1.21.1-Gab Con.zip" .
+          cd ..
+
+      - name: Commit ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "1.21.1-Gab Con.zip"
+          if git diff --cached --quiet; then
+            echo "ZIP already up to date."
+            exit 0
+          fi
+          git commit -m "Build Gab Con resource pack ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
