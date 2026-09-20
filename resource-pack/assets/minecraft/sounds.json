@@ -1,0 +1,39 @@
+{
+  "entity.villager.ambient": {
+    "replace": true,
+    "sounds": [
+      "gabcon/villager/1kg_de_carotte",
+      "gabcon/villager/quest_ce_voulez_vous",
+      "gabcon/villager/pas_faisable",
+      "gabcon/villager/tes_malade_toi"
+    ]
+  },
+  "entity.enderman.ambient": {
+    "replace": true,
+    "sounds": ["gabcon/enderman/du_bist_gut_genug"]
+  },
+  "entity.zombie.ambient": {
+    "replace": true,
+    "sounds": ["gabcon/zombie/ou_tu_sors"]
+  },
+  "entity.pig.ambient": {
+    "replace": true,
+    "sounds": ["gabcon/pig/francois_damiens_rire"]
+  },
+  "entity.horse.ambient": {
+    "replace": true,
+    "sounds": ["gabcon/horse/nathalie_present"]
+  },
+  "entity.ender_dragon.death": {
+    "replace": true,
+    "sounds": ["gabcon/ender_dragon/termine_bonsoir"]
+  },
+  "entity.creeper.primed": {
+    "replace": true,
+    "sounds": ["gabcon/creeper/creeper"]
+  },
+  "entity.generic.drink": {
+    "replace": true,
+    "sounds": ["gabcon/drink/bottle_open"]
+  }
+}
