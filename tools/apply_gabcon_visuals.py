@@ -177,7 +177,10 @@ def build_join_loading_screen():
     GABCON_TEX.mkdir(parents=True, exist_ok=True)
     GABCON_FONT.mkdir(parents=True, exist_ok=True)
 
-    loading = Image.open(LOADING_SOURCE).convert("RGBA")
+    loading_src = Image.open(LOADING_SOURCE).convert("RGBA")
+    # Convert the 3:2 artwork to a 16:9 full-screen texture. The crop is
+    # centered so the banner/logo stays in frame on common 1080p/1440p screens.
+    loading = ImageOps.fit(loading_src, (1920, 1080), RESAMPLE, centering=(0.5, 0.5))
     save_png(loading, GABCON_TEX / "loading_screen.png")
 
     font = {
