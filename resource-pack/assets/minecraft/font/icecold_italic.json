@@ -1,0 +1,14 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "minecraft:icecold_italic.ttf",
+      "shift": [
+        0,
+        0
+      ],
+      "size": 11,
+      "oversample": 2
+    }
+  ]
+}

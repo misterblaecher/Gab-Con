@@ -6,8 +6,18 @@
       "ascent": 14,
       "height": 16,
       "chars": [
-        "\ue001"
+        ""
       ]
+    },
+    {
+      "type": "ttf",
+      "file": "minecraft:icecold.ttf",
+      "shift": [
+        0,
+        0
+      ],
+      "size": 11,
+      "oversample": 2
     },
     {
       "type": "reference",
