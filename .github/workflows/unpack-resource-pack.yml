@@ -6,6 +6,7 @@ on:
     paths:
       - "1.21.1-Gab Con.zip"
       - ".github/workflows/unpack-resource-pack.yml"
+      - ".github/unpack-trigger"
 
 permissions:
   contents: write
