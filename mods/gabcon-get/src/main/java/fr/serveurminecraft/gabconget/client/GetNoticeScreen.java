@@ -61,10 +61,23 @@ public final class GetNoticeScreen extends Screen {
     @Override public void render(GuiGraphics graphics,int mouseX,int mouseY,float partialTick) {
         graphics.fill(0,0,width,height,0xFF10101B);
         graphics.blit(texture(),x,y,w,h,0f,0f,1920,1080,1920,1080);
-        int titleY=y+Math.round(h*0.115f);
-        int subY=y+Math.round(h*0.155f);
-        graphics.drawCenteredString(font,titleText(),x+w/2,titleY,0xFFF9F4D0);
-        graphics.drawCenteredString(font,messageText(),x+w/2,subY,0xFFF6F6F6);
+        float titleFactor=notice.kind()==GetNetwork.NOTICE_GRANTED?0.087f:
+            notice.kind()==GetNetwork.NOTICE_IMPOSED?0.107f:0.137f;
+        int titleY=y+Math.round(h*titleFactor);
+        int subY=y+Math.round(h*0.202f);
+        int titleColor=notice.kind()==GetNetwork.NOTICE_CANCELLED ||
+            notice.kind()==GetNetwork.NOTICE_RELEASED?0xFF2C2034:0xFFF9F4D0;
+        int subColor=notice.kind()==GetNetwork.NOTICE_IMPOSED?0xFFF7F3FF:0xFF2C2034;
+        float titleScale=Math.max(1.0f,Math.min(2.15f,w/800f));
+        graphics.pose().pushPose();
+        graphics.pose().translate(x+w/2,titleY,0);
+        graphics.pose().scale(titleScale,titleScale,1f);
+        graphics.drawCenteredString(font,titleText(),0,0,titleColor);
+        graphics.pose().popPose();
+        java.util.List<net.minecraft.util.FormattedCharSequence> lines =
+            font.split(Component.literal(messageText()),Math.max(120,Math.round(w*0.57f)));
+        for(int i=0;i<Math.min(2,lines.size());i++)
+            graphics.drawCenteredString(font,lines.get(i),x+w/2,subY+i*(font.lineHeight+1),subColor);
         super.render(graphics,mouseX,mouseY,partialTick);
     }
     @Override public boolean isPauseScreen() { return false; }
