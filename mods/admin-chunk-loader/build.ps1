@@ -14,9 +14,9 @@ if (-not (Test-Path $cmd)) {
     Expand-Archive -LiteralPath $zip -DestinationPath $folder -Force
     Remove-Item $zip
 }
-Write-Host 'Compilation du mod pour NeoForge 1.21.1 (Java 21 requis)...'
+Write-Host 'Compilation de GabCon Admin Chunk Loader pour NeoForge 1.21.1 (Java 21 requis)...'
 & $cmd --no-daemon build
 if ($LASTEXITCODE -ne 0) {
     throw "Compilation echouee, code Gradle: $LASTEXITCODE"
 }
-Write-Host 'Le mod compile se trouve dans build\libs\adminchunkloader-1.0.0.jar'
+Write-Host 'Le mod compile se trouve dans build\libs\gabcon-admin-chunk-loader-1.0.0.jar'

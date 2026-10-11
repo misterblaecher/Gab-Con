@@ -1,6 +1,8 @@
-# Admin Chunk Loader — NeoForge 1.21.1
+# GabCon Admin Chunk Loader — NeoForge 1.21.1
 
 Mod **côté serveur uniquement**, sans dépendance à FTB Chunks et sans installation sur les clients.
+Le nom affiché dans Minecraft est **GabCon Admin Chunk Loader** et le fichier compilé s'appelle
+`gabcon-admin-chunk-loader-1.0.0.jar`. L'identifiant technique `adminchunkloader` est conservé.
 
 ## Fonctionnement
 
@@ -18,16 +20,34 @@ Mod **côté serveur uniquement**, sans dépendance à FTB Chunks et sans instal
 
 **Attention** : FTB Chunks maintient ses propres claims et tickets de chargement ; cette interface pilote le `/forceload` **vanilla** et ne modifie pas les claims FTB.
 
-## Installation de développement / compilation Windows
+## Compilation automatique : GitHub Actions
 
-1. Disposer de **Java JDK 21** (`java -version` et `javac -version`).
+Le workflow [Build GabCon Admin Chunk Loader](../../.github/workflows/build-gabcon-admin-chunk-loader.yml)
+compile ce projet automatiquement sur chaque `push` vers `main` et sur les pull requests qui
+modifient le mod ou le workflow. Il peut aussi être lancé manuellement via `Actions → Build GabCon Admin Chunk Loader → Run workflow`.
+
+Il utilise **Java 21** et **Gradle 9.2.1** pour NeoForge 1.21.1. Après une compilation réussie :
+
+1. Ouvrir l'onglet **Actions** du dépôt.
+2. Ouvrir l'exécution **Build GabCon Admin Chunk Loader** terminée avec succès.
+3. Dans **Artifacts**, télécharger `gabcon-admin-chunk-loader-1.0.0` (archive ZIP fournie par GitHub).
+4. Extraire `gabcon-admin-chunk-loader-1.0.0.jar` du ZIP.
+5. Arrêter le serveur, copier le `.jar` dans `A:\MinecraftServer\mods\`, puis redémarrer.
+
+Le ZIP des artefacts est conservé **30 jours**. Le workflow ne publie pas de GitHub Release et
+n'installe pas le mod sur ton serveur : il compile uniquement et fournit le `.jar` à télécharger.
+
+## Compilation manuelle sur Windows
+
+1. Disposer du **JDK Java 21** (`java -version` et `javac -version`).
 2. Ouvrir ce dossier sur Windows.
-3. Double-cliquer sur **`build.bat`**. Le script télécharge Gradle 9.2.1 depuis le site officiel dans `.build-tools` s'il n'est pas disponible (connexion internet requise), puis exécute `gradle build`.
-4. Le mod compilé est créé dans **`build\libs\adminchunkloader-1.0.0.jar`**.
+3. Double-cliquer sur **`build.bat`**. Le script télécharge Gradle 9.2.1 depuis le site officiel dans `.build-tools` si nécessaire, puis exécute `gradle build`.
+4. Récupérer **`build\libs\gabcon-admin-chunk-loader-1.0.0.jar`**.
 5. Arrêter le serveur, copier le `.jar` dans **`A:\MinecraftServer\mods\`**, puis redémarrer.
 6. Depuis un compte OP niveau 2, utiliser `/chunkloader` ou `/chunkloader at -1544 710`.
 
-**IMPORTANT :** Ce dossier contient **le projet source**, pas un `.jar` prêt à jouer. Le projet n'a pas encore été compilé ni testé automatiquement, faute d'accès aux dépendances Gradle/NeoForge. Compiler et tester sur une copie du serveur avant production.
+**Important :** il s'agit d'un projet source. Les builds automatisés servent à vérifier la compilation,
+mais le gameplay doit être testé sur une copie du serveur avant installation en production.
 
 ## Sécurité et charge
 

@@ -5,9 +5,9 @@ license="MIT"
 [[mods]]
 modId="adminchunkloader"
 version="${mod_version}"
-displayName="Admin Chunk Loader"
-authors="Serveur Minecraft"
-description='''Interface de gestion du force-load vanilla, réservée aux admins, sans mod client.'''
+displayName="GabCon Admin Chunk Loader"
+authors="GabCon"
+description='''Interface GabCon de gestion du force-load vanilla, réservée aux admins, sans mod client.'''
 displayTest="IGNORE_SERVER_VERSION"
 
 [[dependencies.adminchunkloader]]

@@ -1,0 +1,52 @@
+name: Build GabCon Admin Chunk Loader
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "mods/admin-chunk-loader/**"
+      - ".github/workflows/build-gabcon-admin-chunk-loader.yml"
+  pull_request:
+    paths:
+      - "mods/admin-chunk-loader/**"
+      - ".github/workflows/build-gabcon-admin-chunk-loader.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compile NeoForge 1.21.1 (Java 21)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: mods/admin-chunk-loader
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Gradle 9.2.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.2.1"
+
+      - name: Build the mod
+        run: gradle --no-daemon --stacktrace build
+
+      - name: Upload compiled mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: gabcon-admin-chunk-loader-1.0.0
+          path: mods/admin-chunk-loader/build/libs/gabcon-admin-chunk-loader-*.jar
+          if-no-files-found: error
+          retention-days: 30
