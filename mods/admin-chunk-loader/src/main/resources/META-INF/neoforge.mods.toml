@@ -2,13 +2,15 @@ modLoader="javafml"
 loaderVersion="[1,)"
 license="MIT"
 
+[[mixins]]
+config="adminchunkloader.mixins.json"
+
 [[mods]]
 modId="adminchunkloader"
 version="${mod_version}"
 displayName="GabCon Admin Chunk Loader"
 authors="GabCon"
-description='''Interface GabCon de gestion du force-load vanilla, réservée aux admins, sans mod client.'''
-displayTest="IGNORE_SERVER_VERSION"
+description='''Mode admin pour charger les chunks sur la carte de FTB Chunks, avec interface coffre en secours.'''
 
 [[dependencies.adminchunkloader]]
 modId="neoforge"
@@ -22,4 +24,25 @@ modId="minecraft"
 type="required"
 versionRange="[1.21.1]"
 ordering="NONE"
+side="BOTH"
+
+[[dependencies.adminchunkloader]]
+modId="ftbchunks"
+type="required"
+versionRange="[2101.1.22,2101.1.23)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.adminchunkloader]]
+modId="ftblibrary"
+type="required"
+versionRange="[2101.1.36,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.adminchunkloader]]
+modId="ftbteams"
+type="required"
+versionRange="[2101.1.11,)"
+ordering="AFTER"
 side="BOTH"

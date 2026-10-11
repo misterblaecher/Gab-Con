@@ -7,22 +7,23 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.level.ChunkPos;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 /**
- * Petit outil d'administration serveur. Aucun écran, item ou paquet personnalisé :
- * les clients standards voient un menu de coffre vanilla.
+ * Le coffre admin reste disponible si l'interface FTB doit être dépannée.
+ * Les actions de la carte FTB sont vérifiées côté serveur par ChunkNetwork.
  */
 @Mod(AdminChunkLoader.MOD_ID)
 public final class AdminChunkLoader {
     public static final String MOD_ID = "adminchunkloader";
 
-    public AdminChunkLoader() {
+    public AdminChunkLoader(IEventBus modBus) {
         NeoForge.EVENT_BUS.register(this);
+        modBus.addListener(ChunkNetwork::register);
     }
 
     @SubscribeEvent
@@ -50,10 +51,8 @@ public final class AdminChunkLoader {
         ServerPlayer player = source.getPlayerOrException();
         int chunkX = Math.floorDiv(blockX, 16);
         int chunkZ = Math.floorDiv(blockZ, 16);
-
-        Component title = Component.literal("Force-load | " +
+        Component title = Component.literal("GabCon Force-load | " +
             player.serverLevel().dimension().location().getPath());
-
         player.openMenu(new SimpleMenuProvider(
             (containerId, inventory, menuPlayer) ->
                 new AdminChunkMenu(containerId, inventory, player.serverLevel(), chunkX, chunkZ),

@@ -6,18 +6,26 @@ plugins {
 version = mod_version
 group = mod_group_id
 
-base {
-    archivesName = 'gabcon-admin-chunk-loader'
+base { archivesName = 'gabcon-admin-chunk-loader' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    maven { url = 'https://maven.ftb.dev/releases' }
+    maven { url = 'https://maven.architectury.dev' }
+    mavenCentral()
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+dependencies {
+    // FTB versions correspondant exactement aux JARs du serveur GabCon
+    implementation 'dev.ftb.mods:ftb-chunks-neoforge:2101.1.22'
+    implementation 'dev.ftb.mods:ftb-library-neoforge:2101.1.36'
+    implementation 'dev.ftb.mods:ftb-teams-neoforge:2101.1.11'
+}
 
 neoForge {
     version = project.neo_version
     mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
+        "${mod_id}" { sourceSet(sourceSets.main) }
     }
 }
 
