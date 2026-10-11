@@ -17,54 +17,49 @@ import fr.serveurminecraft.gabconget.GabConGet;
 import fr.serveurminecraft.gabconget.GetNetwork;
 import org.lwjgl.glfw.GLFW;
 
-/** Enregistre la touche et la couche de rendu seulement sur le client physique. */
 public final class ClientEvents {
     private ClientEvents() {}
-
     private static final KeyMapping GET_KEY = new KeyMapping(
-        "key.gabconget.toggle", InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_H, "key.categories.gabconget");
+        "key.gabconget.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_H, "key.categories.gabconget");
+    private static final KeyMapping MENU_KEY = new KeyMapping(
+        "key.gabconget.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.categories.gabconget");
 
     @EventBusSubscriber(modid = GabConGet.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
     public static final class ModBus {
-        @SubscribeEvent
-        public static void keys(RegisterKeyMappingsEvent event) {
-            event.register(GET_KEY);
+        @SubscribeEvent public static void keys(RegisterKeyMappingsEvent event) {
+            event.register(GET_KEY); event.register(MENU_KEY);
         }
-
-        @SubscribeEvent
-        public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        @SubscribeEvent public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(GetDetailLayer.LAYER, GetDetailLayer::createBodyLayer);
         }
-
-        @SubscribeEvent
-        public static void addLayers(EntityRenderersEvent.AddLayers event) {
+        @SubscribeEvent public static void addLayers(EntityRenderersEvent.AddLayers event) {
             for (PlayerSkin.Model skin : event.getSkins()) {
                 if (event.getSkin(skin) instanceof PlayerRenderer renderer) {
                     renderer.addLayer(new GetDetailLayer(renderer,
-                        event.getEntityModels().bakeLayer(GetDetailLayer.LAYER),
-                        skin == PlayerSkin.Model.SLIM));
+                        event.getEntityModels().bakeLayer(GetDetailLayer.LAYER), skin == PlayerSkin.Model.SLIM));
                 }
             }
         }
     }
-
     @EventBusSubscriber(modid = GabConGet.MOD_ID, value = Dist.CLIENT)
     public static final class GameBus {
-        @SubscribeEvent
-        public static void tick(ClientTickEvent.Post event) {
+        @SubscribeEvent public static void tick(ClientTickEvent.Post event) {
             ClientGetState.clientTick();
             Minecraft mc = Minecraft.getInstance();
-            while (GET_KEY.consumeClick()) {
-                if (mc.player != null && mc.level != null && mc.screen == null) {
+            while(GET_KEY.consumeClick()) {
+                if(mc.player != null && mc.level != null && mc.screen == null)
                     PacketDistributor.sendToServer(GetNetwork.ToggleRequest.INSTANCE);
+            }
+            while(MENU_KEY.consumeClick()) {
+                if(mc.player != null && mc.level != null && mc.screen == null) {
+                    mc.setScreen(new GetRightsScreen());
+                    PacketDistributor.sendToServer(GetNetwork.RightsQuery.INSTANCE);
                 }
             }
+            ClientNotices.tick();
         }
-
-        @SubscribeEvent
-        public static void logout(ClientPlayerNetworkEvent.LoggingOut event) {
-            ClientGetState.clear();
+        @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut event) {
+            ClientGetState.clear();ClientRights.clear();ClientNotices.clear();
         }
     }
 }

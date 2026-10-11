@@ -10,7 +10,7 @@ modId="gabconget"
 version="${mod_version}"
 displayName="GabCon - Gueule en Terre"
 authors="GabCon"
-description='''Emote Gueule en Terre (GET) : pose animée, dix doigts frétillants et synchronisation multijoueur.'''
+description='''Emote GET avec droits PvP persistants, revanche annulatrice, menus et écrans illustrés.'''
 
 [[dependencies.gabconget]]
 modId="neoforge"
