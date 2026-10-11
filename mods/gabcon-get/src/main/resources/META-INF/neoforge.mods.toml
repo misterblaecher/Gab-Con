@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+
+[[mixins]]
+config="gabconget.mixins.json"
+
+[[mods]]
+modId="gabconget"
+version="${mod_version}"
+displayName="GabCon - Gueule en Terre"
+authors="GabCon"
+description='''Emote Gueule en Terre (GET) : pose animée, dix doigts frétillants et synchronisation multijoueur.'''
+
+[[dependencies.gabconget]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.251,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.gabconget]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
