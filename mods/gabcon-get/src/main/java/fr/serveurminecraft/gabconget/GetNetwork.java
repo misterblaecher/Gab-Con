@@ -18,6 +18,7 @@ public final class GetNetwork {
     public static final int NOTICE_GRANTED = 0;
     public static final int NOTICE_CANCELLED = 1;
     public static final int NOTICE_IMPOSED = 2;
+    public static final int NOTICE_RELEASED = 3;
 
     public record ToggleRequest() implements CustomPacketPayload {
         public static final ToggleRequest INSTANCE = new ToggleRequest();

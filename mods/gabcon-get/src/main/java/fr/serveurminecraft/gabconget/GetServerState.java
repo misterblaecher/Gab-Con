@@ -68,6 +68,7 @@ public final class GetServerState {
             if (!actor.getUUID().equals(current)) return 0;
             FORCED_BY.remove(target.getUUID());
             set(target, false, true);
+            notice(target, GetNetwork.NOTICE_RELEASED, actor.getGameProfile().getName());
         }
         actor.displayClientMessage(Component.literal((requested ? "GET imposée à " : "GET levée pour ") + target.getGameProfile().getName())
             .withStyle(ChatFormatting.LIGHT_PURPLE), true);

@@ -28,6 +28,7 @@ public final class GetNoticeScreen extends Screen {
         return switch (notice.kind()) {
             case GetNetwork.NOTICE_GRANTED -> "DROIT DE GET DÉBLOQUÉ !";
             case GetNetwork.NOTICE_IMPOSED -> "GUEULE EN TERRE !";
+            case GetNetwork.NOTICE_RELEASED -> "GET LEVÉE !";
             default -> "GET ANNULÉE !";
         };
     }
@@ -35,6 +36,7 @@ public final class GetNoticeScreen extends Screen {
         return switch (notice.kind()) {
             case GetNetwork.NOTICE_GRANTED -> "Tu peux imposer la GET à " + notice.other() + ".";
             case GetNetwork.NOTICE_IMPOSED -> notice.other() + " t'a imposé la GET. Le comité a parlé !";
+            case GetNetwork.NOTICE_RELEASED -> notice.other() + " t'a relevé. Il garde son droit de GET.";
             default -> "Votre dette de GET avec " + notice.other() + " est effacée.";
         };
     }
