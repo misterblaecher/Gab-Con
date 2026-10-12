@@ -1,0 +1,84 @@
+package fr.serveurminecraft.gabconget.client;
+
+import fr.serveurminecraft.gabconget.GabConGet;
+import fr.serveurminecraft.gabconget.GetNetwork;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+
+/** Écrans 1920x1080 : la texture n'a ni texte ni vrai bouton. */
+public final class GetNoticeScreen extends Screen {
+    private static final ResourceLocation GRANTED = ResourceLocation.fromNamespaceAndPath(GabConGet.MOD_ID, "textures/gui/get_granted.png");
+    private static final ResourceLocation IMPOSED = ResourceLocation.fromNamespaceAndPath(GabConGet.MOD_ID, "textures/gui/get_imposed.png");
+    private static final ResourceLocation CANCELLED = ResourceLocation.fromNamespaceAndPath(GabConGet.MOD_ID, "textures/gui/get_cancelled.png");
+    private final GetNetwork.Notice notice;
+    private int x, y, w, h;
+
+    public GetNoticeScreen(GetNetwork.Notice notice) {
+        super(Component.literal("GabCon GET"));
+        this.notice = notice;
+    }
+    private ResourceLocation texture() {
+        return notice.kind() == GetNetwork.NOTICE_GRANTED ? GRANTED :
+            notice.kind() == GetNetwork.NOTICE_IMPOSED ? IMPOSED : CANCELLED;
+    }
+    private String titleText() {
+        return switch (notice.kind()) {
+            case GetNetwork.NOTICE_GRANTED -> "DROIT DE GET DÉBLOQUÉ !";
+            case GetNetwork.NOTICE_IMPOSED -> "GUEULE EN TERRE !";
+            case GetNetwork.NOTICE_RELEASED -> "GET LEVÉE !";
+            default -> "GET ANNULÉE !";
+        };
+    }
+    private String messageText() {
+        return switch (notice.kind()) {
+            case GetNetwork.NOTICE_GRANTED -> "Tu peux imposer la GET à " + notice.other() + ".";
+            case GetNetwork.NOTICE_IMPOSED -> notice.other() + " t'a imposé la GET. Le comité a parlé !";
+            case GetNetwork.NOTICE_RELEASED -> notice.other() + " t'a relevé. Il garde son droit de GET.";
+            default -> "Votre dette de GET avec " + notice.other() + " est effacée.";
+        };
+    }
+    private String buttonText() {
+        return switch (notice.kind()) {
+            case GetNetwork.NOTICE_GRANTED -> "MAGNIFIQUE...";
+            case GetNetwork.NOTICE_IMPOSED -> "J'AI COMPRIS";
+            default -> "RETOUR AU JEU";
+        };
+    }
+    @Override protected void init() {
+        float scale=Math.min(this.width/1920f, this.height/1080f);
+        w=Math.max(1,Math.round(1920*scale)); h=Math.max(1,Math.round(1080*scale));
+        x=(this.width-w)/2; y=(this.height-h)/2;
+        int closeSize=Math.max(14,Math.round(48*scale));
+        addRenderableWidget(Button.builder(Component.literal("X"), btn -> onClose())
+            .bounds(x+w-Math.round(112*scale),y+Math.round(56*scale),closeSize,closeSize).build());
+        addRenderableWidget(Button.builder(Component.literal(buttonText()), btn -> onClose())
+            .bounds(x+(w-Math.max(100,Math.round(320*scale)))/2,
+                y+Math.round(918*scale),Math.max(100,Math.round(320*scale)),Math.max(22,Math.round(64*scale))).build());
+    }
+    @Override public void render(GuiGraphics graphics,int mouseX,int mouseY,float partialTick) {
+        graphics.fill(0,0,width,height,0xFF10101B);
+        graphics.blit(texture(),x,y,w,h,0f,0f,1920,1080,1920,1080);
+        float titleFactor=notice.kind()==GetNetwork.NOTICE_GRANTED?0.087f:
+            notice.kind()==GetNetwork.NOTICE_IMPOSED?0.107f:0.137f;
+        int titleY=y+Math.round(h*titleFactor);
+        int subY=y+Math.round(h*0.202f);
+        int titleColor=notice.kind()==GetNetwork.NOTICE_CANCELLED ||
+            notice.kind()==GetNetwork.NOTICE_RELEASED?0xFF2C2034:0xFFF9F4D0;
+        int subColor=notice.kind()==GetNetwork.NOTICE_IMPOSED?0xFFF7F3FF:0xFF2C2034;
+        float titleScale=Math.max(1.0f,Math.min(2.15f,w/800f));
+        graphics.pose().pushPose();
+        graphics.pose().translate(x+w/2,titleY,0);
+        graphics.pose().scale(titleScale,titleScale,1f);
+        graphics.drawCenteredString(font,titleText(),0,0,titleColor);
+        graphics.pose().popPose();
+        java.util.List<net.minecraft.util.FormattedCharSequence> lines =
+            font.split(Component.literal(messageText()),Math.max(120,Math.round(w*0.57f)));
+        for(int i=0;i<Math.min(2,lines.size());i++)
+            graphics.drawCenteredString(font,lines.get(i),x+w/2,subY+i*(font.lineHeight+1),subColor);
+        super.render(graphics,mouseX,mouseY,partialTick);
+    }
+    @Override public boolean isPauseScreen() { return false; }
+}
