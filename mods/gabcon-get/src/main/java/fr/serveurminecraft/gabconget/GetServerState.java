@@ -78,15 +78,30 @@ public final class GetServerState {
 
     public static void onPlayerKilled(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer victim)) return;
+        clearDefeatedPose(victim);
+        if (event.getSource().getEntity() instanceof ServerPlayer killer && killer != victim)
+            resolvePvpOutcome(killer, victim);
+    }
+
+    /** Simule le resultat d'un kill PvP, sans infliger de mort ni de degats. */
+    public static int simulateCombat(ServerPlayer killer, ServerPlayer victim) {
+        if (killer.getUUID().equals(victim.getUUID())) return 0;
+        clearDefeatedPose(victim);
+        return resolvePvpOutcome(killer, victim);
+    }
+
+    private static void clearDefeatedPose(ServerPlayer victim) {
         UUID priorHolder = FORCED_BY.remove(victim.getUUID());
         if (priorHolder != null) {
             ServerPlayer holder = victim.server.getPlayerList().getPlayer(priorHolder);
             if (holder != null) syncRights(holder);
         }
         ACTIVE.remove(victim.getUUID());
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(victim, new GetNetwork.GetState(victim.getUUID(), false));
-        if (!(event.getSource().getEntity() instanceof ServerPlayer killer) || killer == victim) return;
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(victim,
+            new GetNetwork.GetState(victim.getUUID(), false));
+    }
 
+    private static int resolvePvpOutcome(ServerPlayer killer, ServerPlayer victim) {
         GetRightsData rights = GetRightsData.of(victim.server);
         UUID killerId = killer.getUUID(), victimId = victim.getUUID();
         // Revanche : on efface la dette antérieure, sans en créer une nouvelle.
@@ -99,10 +114,28 @@ public final class GetServerState {
             notice(victim, GetNetwork.NOTICE_CANCELLED, killer.getGameProfile().getName());
             syncRights(victim);
             syncRights(killer);
+            return 2;
         } else if (rights.grant(killerId, victimId)) {
             notice(killer, GetNetwork.NOTICE_GRANTED, victim.getGameProfile().getName());
             syncRights(killer);
+            return 1;
         }
+        return 0;
+    }
+
+    /** Supprime un droit particulier, sans affecter les autres droits. */
+    public static boolean resetRight(ServerPlayer holder, ServerPlayer target) {
+        boolean removed = GetRightsData.of(holder.server).revoke(holder.getUUID(), target.getUUID());
+        if (holder.getUUID().equals(FORCED_BY.get(target.getUUID()))) {
+            FORCED_BY.remove(target.getUUID());
+            set(target, false, true);
+        }
+        syncRights(holder);
+        return removed;
+    }
+
+    public static UUID forcedBy(ServerPlayer player) {
+        return FORCED_BY.get(player.getUUID());
     }
 
     public static void syncRights(ServerPlayer actor) {
@@ -137,6 +170,14 @@ public final class GetServerState {
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         FORCED_BY.remove(player.getUUID());
+        java.util.List<UUID> targets = FORCED_BY.entrySet().stream()
+            .filter(e -> player.getUUID().equals(e.getValue()))
+            .map(java.util.Map.Entry::getKey).toList();
+        for (UUID id : targets) {
+            FORCED_BY.remove(id);
+            ServerPlayer target = player.server.getPlayerList().getPlayer(id);
+            if (target != null) set(target, false, true);
+        }
         if (ACTIVE.remove(player.getUUID())) {
             PacketDistributor.sendToPlayersTrackingEntity(player, new GetNetwork.GetState(player.getUUID(), false));
         }

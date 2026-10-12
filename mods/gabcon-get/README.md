@@ -1,4 +1,4 @@
-# GabCon GET 0.2.0 — droits PvP et interfaces
+# GabCon GET 0.2.1 — droits PvP et interfaces
 
 Minecraft Java **1.21.1**, **NeoForge 21.1.251**, Java 21. Installer le **même JAR** côté serveur et chez les joueurs.
 
@@ -39,7 +39,7 @@ Les boutons `X` (48x48 pixels source, coin supérieur droit) et la validation (3
 
 ## Compilation
 
-`gradle build` depuis ce dossier avec Gradle 8.11+ et Java 21 ; sinon utiliser le workflow GitHub Actions du dépôt parent. JAR : `build/libs/gabcon-get-0.2.0.jar`.
+`gradle build` depuis ce dossier avec Gradle 8.11+ et Java 21 ; sinon utiliser le workflow GitHub Actions du dépôt parent. JAR : `build/libs/gabcon-get-0.2.1.jar`.
 
 ## Tests en jeu recommandés
 
@@ -49,3 +49,35 @@ Les boutons `X` (48x48 pixels source, coin supérieur droit) et la validation (3
 4. B tue A : les deux reçoivent l'annulation, le droit de A est supprimé et la GET imposée par A, si présente, est levée.
 5. Déconnexion/redémarrage : les droits restent mais les poses imposées sont annulées.
 6. Tester deux clients et les vues Steve/Alex avec mods et armures.
+
+## Commandes de test (OP niveau 2 uniquement)
+
+Toutes les commandes de ce paragraphe sont sous `/get test`, protegees via Brigadier `requires(source -> source.hasPermission(2))`.
+Les non-OP n'y ont pas acces, meme via des paquets reseau.
+
+| Commande | Action | Etat du monde |
+| --- | --- | --- |
+| `/get test` ou `/get test aide` | Aide en jeu | Aucun changement |
+| `/get test ecran obtenu` | Affiche le succes (image ceremonie) | Aucun changement |
+| `/get test ecran impose` | Affiche la sentence (tribunal) | Aucun changement |
+| `/get test ecran annule` | Affiche l'annulation (atelier) | Aucun changement |
+| `/get test ecran releve` | Affiche la relevee (atelier, autre titre) | Aucun changement |
+| `/get test ecran tous` | Enfile les 4 ecrans dans l'ordre | Aucun changement |
+| `/get test ecran tous <joueur>` | Envoie les 4 ecrans a ce joueur | Aucun changement |
+| `/get test pose <joueur> on/off` | Force/libere visuellement la pose | Modifie la pose temporaire |
+| `/get test combat <tueur> <victime>` | Simule le kill PvP : droit ou revanche, notifications | Modifie les droits sauvegardes |
+| `/get test etat <joueur>` | Affiche la pose, qui la force, et les droits detenus | Aucun changement |
+| `/get test reset <detenteur> <cible>` | Retire un droit precis et la pose imposee associee | Modifie les droits sauvegardes |
+
+Les noms apres `ecran` peuvent tous etre suivis du nom du joueur cible (OP comme non-OP).
+Sans cible, le joueur OP recoit lui-meme la fenetre. Depuis la console, preciser la cible.
+Les apercus utilisent le nom fictif `Joueur_DEMO`, sans creer de droit.
+
+Exemple de test avec deux personnes connectees : `/get test reset Steve Alex`,
+`/get test combat Steve Alex`, Steve utilise `G` ou `/get imposer Alex`,
+`/get test etat Alex`, puis `/get test combat Alex Steve` pour annuler la dette.
+La simulation combat n'inflige **aucun degat**, mais gere les droits comme une elimination.
+Les droits crees par ces tests restent sauvegardes tant qu'ils ne sont pas annules ou reset.
+
+Tous les ecrans de preview restent dans la file d'attente Minecraft ; il faut fermer chaque ecran
+pour afficher le suivant. Utiliser `/get test ecran tous` en dehors d'autres GUI pour un test immediat.

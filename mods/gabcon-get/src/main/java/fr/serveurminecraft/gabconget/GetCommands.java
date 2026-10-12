@@ -25,6 +25,7 @@ public final class GetCommands {
             .then(Commands.literal("relever").then(Commands.argument("joueur", EntityArgument.player())
                 .executes(ctx -> GetServerState.impose(ctx.getSource().getPlayerOrException(),
                     EntityArgument.getPlayer(ctx, "joueur"),false))))
+            .then(GetTestCommands.build())
             .then(Commands.literal("set").requires(source -> source.hasPermission(2))
                 .then(Commands.argument("joueur", EntityArgument.player())
                     .then(Commands.literal("on").executes(ctx -> admin(EntityArgument.getPlayer(ctx,"joueur"),true)))
